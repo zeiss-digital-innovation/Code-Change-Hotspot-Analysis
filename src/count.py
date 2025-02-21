@@ -4,7 +4,7 @@ from collections import Counter
 # Pfad zur Textdatei
 file_path = 'git-log.txt'  # Ändere dies auf den Pfad deiner Datei
 
-def count_lines(file_path):
+def count_lines(file_path: str):
     with open(file_path, 'r') as file:
         # Lese alle Zeilen und entferne Leerzeichen und Zeilenumbrüche
         lines = [line.strip() for line in file.readlines() if line.strip()]  # Filtert Leerzeilen
