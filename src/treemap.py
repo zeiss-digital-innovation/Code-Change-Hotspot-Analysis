@@ -3,7 +3,7 @@ import plotly.express as px
 
 # Schritt 1: Lese die Daten aus der Textdatei
 data = []
-file_path:str = "c:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Code-Change-Hotspot-Analysis\test_daten.txt"
+file_path:str = "c:/Users/DITSTEIN/OneDrive - Carl Zeiss AG/Dokumente/[01] Arbeit/[01] Coding/[02] HotSpot Analyse/Code-Change-Hotspot-Analysis/test_daten.txt"
 with open(file_path, 'r') as file:
     for line in file:
         path, changes = line.strip().split(': ')
