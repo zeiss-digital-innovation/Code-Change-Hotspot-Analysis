@@ -3,7 +3,9 @@ import plotly.express as px
 
 
 data = []
-file_path:str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Data\copy_data_newer_2024.txt"
+##Data from the git log command after the set date (i.e 2024/01/01)
+#After running count.py and comparison.py
+file_path:str = r""
 with open(file_path, 'r') as file:
     for line in file:
         if line.strip():
