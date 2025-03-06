@@ -110,17 +110,23 @@ def displaying_treemap(treemap_data_file_path: str):
                     title='Treemap der Dateipfade basierend auf Änderungen')
     fig.update_traces(root_color="lightgrey")
 
-
     fig.show()
 
+# Running the actual script
+if __name__ == "__main__": 
+    if len(sys.argv) != 3:
+        print('Please provide 2 filenames as command line arguments.\n'
+            'The file xontaining the older data must be named first\n'
+            'Example: py createHotspots.py "old.txt" "new.txt"')
+        sys.exit(1)
 
-if len(sys.argv) != 3:
-    print('Please provide 2 filenames as command line arguments.\n'
-          'The file xontaining the older data must be named first\n'
-          'Example: py createHotspots.py "old.txt" "new.txt"')
-    sys.exit(1)
+    script_dir: str = os.path.dirname(os.path.abspath(__file__))
+    older_data_file_path: str = os.path.join(script_dir, sys.argv[1])
+    newer_data_file_path: str = os.path.join(script_dir, sys.argv[2])
+    print("Argv:", sys.argv)
 
-script_dir: str = os.path.dirname(os.path.abspath(__file__))
-older_data_file_path: str = os.path.join(script_dir, sys.argv[1])
-newer_data_file_path: str = os.path.join(script_dir, sys.argv[2])
-print("Argv:", sys.argv)
+    file_names: list[str] = count_lines(older_data_file_path, newer_data_file_path)
+
+    treemap_data_file_path: str = compare_data(file_names)
+
+    displaying_treemap(treemap_data_file_path) 
