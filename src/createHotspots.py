@@ -9,7 +9,7 @@ import re
 from collections import Counter 
 
 def count_lines(older_data_file_path: str, newer_data_file_path: str):
-
+    
     with open(older_data_file_path, 'r') as file:
             # reads all lines and removes empty spaces and line breaks
             older_data_lines = [line.strip() for line in file.readlines() if line.strip()] 
@@ -54,9 +54,9 @@ def compare_data(file_names: list[str]):
     older_data_counted_file_path: str = os.path.join(script_dir, file_names[0])
     newer_data_counted_file_path: str = os.path.join(script_dir, file_names[1])
     
-    shutil.copyfile(newer_data_counted_file_path, "treemap_data.txt")
+    treemap_data_file_path: str = shutil.copyfile(newer_data_counted_file_path, "treemap_data.txt")
 
-    treemap_data_file_path: str = os.path.join(script_dir, "treemap.txt")
+    # treemap_data_file_path: str = os.path.join(script_dir, "treemap.txt")
     
     # Creates the lists so only the paths are compared
     with open(older_data_counted_file_path, 'r') as file:
@@ -116,7 +116,7 @@ def displaying_treemap(treemap_data_file_path: str):
 if __name__ == "__main__": 
     if len(sys.argv) != 3:
         print('Please provide 2 filenames as command line arguments.\n'
-            'The file xontaining the older data must be named first\n'
+            'The file containing the older data must be named first\n'
             'Example: py createHotspots.py "old.txt" "new.txt"')
         sys.exit(1)
 
