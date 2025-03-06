@@ -3,7 +3,7 @@ import plotly.express as px
 
 
 data = []
-file_path:str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Data\copy_data_newer_2024.txt"
+file_path:str = r""
 with open(file_path, 'r') as file:
     for line in file:
         if line.strip():
@@ -16,12 +16,19 @@ with open(file_path, 'r') as file:
 
 
 df = pd.DataFrame(data)
+
+df['Path Components'] = df['File Path'].apply(lambda x: x.split('/'))
+max_depth: int = df['Path Components'].apply(len).max()
+for i in range(0,max_depth):
+    df[f'Level {i + 1}'] = df['Path Components'].apply(lambda x: x[i] if i < len(x) else None)
+
 print(df)
+path = [px.Constant("all")] + [f'Level {i}' for i in range(1, max_depth + 1)]
 
 fig = px.treemap(df, 
-                 path=['File Path'], 
+                 path=path, 
                  values='Changes', 
                  title='Treemap der Dateipfade basierend auf Änderungen')
-
+fig.update_traces(root_color="lightgrey")
 
 fig.show()
