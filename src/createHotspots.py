@@ -10,6 +10,8 @@ from collections import Counter
 
 def count_lines(older_data_file_path: str, newer_data_file_path: str):
     
+    script_dir: str = os.path.dirname(os.path.abspath(__file__))
+
     with open(older_data_file_path, 'r') as file:
             # reads all lines and removes empty spaces and line breaks
             older_data_lines = [line.strip() for line in file.readlines() if line.strip()] 
@@ -18,7 +20,7 @@ def count_lines(older_data_file_path: str, newer_data_file_path: str):
             # Counts the occurences of every filtered line
             older_data_line_counts = Counter(older_data_filtered_lines)
             
-            older_data_output_filename = "older_counted.txt"
+            older_data_output_filename = os.path.join(script_dir, "older_counted.txt")
 
             with open(older_data_output_filename, 'w') as output_file:
                 for line, count in older_data_line_counts.items():
@@ -33,7 +35,7 @@ def count_lines(older_data_file_path: str, newer_data_file_path: str):
         # Counts the occurences of every filtered line
         newer_data_line_counts = Counter(newer_data_filtered_lines)
             
-        newer_data_output_filename = "newer_counted.txt"
+        newer_data_output_filename = os.path.join(script_dir,"newer_counted.txt")
 
         with open(newer_data_output_filename, 'w') as output_file:
             for line, count in newer_data_line_counts.items():
