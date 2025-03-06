@@ -11,7 +11,7 @@ def count_lines(old_data_file_path: str, new_data_file_path: str):
             # Counts the occurences of every filtered line
             old_data_line_counts = Counter(old_data_filtered_lines)
             
-            old_data_output_filename = "old_counted.txt"
+            old_data_output_filename = "older_counted.txt"
 
             with open(old_data_output_filename, 'w') as output_file:
                 for line, count in old_data_line_counts.items():
@@ -26,7 +26,7 @@ def count_lines(old_data_file_path: str, new_data_file_path: str):
         # Counts the occurences of every filtered line
         new_data_line_counts = Counter(new_data_filtered_lines)
             
-        new_data_output_filename = "new_counted.txt"
+        new_data_output_filename = "newer_counted.txt"
 
         with open(new_data_output_filename, 'w') as output_file:
             for line, count in new_data_line_counts.items():
