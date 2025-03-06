@@ -1,14 +1,28 @@
 import pandas as pd
 import plotly.express as px
+# need to be downloaded
+
+import sys
+import os 
 
 
-data = []
+if len(sys.argv) != 3:
+    print('Please provide 2 filenames as command line arguments.\n'
+    'Example: py createHotspots.py "old.txt" "new.txt"')
+    sys.exit(1)
+
+script_dir: str = os.path.dirname(os.path.abspath(__file__))
+first_file_path: str = os.path.join(script_dir, sys.argv[1])
+second_file_path: str = os.path.join(script_dir, sys.argv[2])
+print("Argv:", sys.argv)
+
+
+data: list = []
+
 
 ##Data from the git log command after the set date (i.e 2024/01/01)
 #After running count.py and comparison.py
-
-file_path:str = r""
-with open(file_path, 'r') as file:
+with open(first_file_path, 'r') as file:
     for line in file:
         if line.strip():
             path, changes = line.strip().split(': ')
