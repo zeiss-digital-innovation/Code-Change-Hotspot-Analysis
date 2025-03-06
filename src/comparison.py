@@ -12,6 +12,7 @@ newer_data_file_path: str = r""
 #Then use the path here
 copy_of_newer_data_path: str = r""
 
+
 with open(older_data_file_path, 'r') as file:
     older_data_paths_as_list: list[str] = []
     for line in file: 
