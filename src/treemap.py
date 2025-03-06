@@ -3,6 +3,10 @@ import plotly.express as px
 
 
 data = []
+
+##Data from the git log command after the set date (i.e 2024/01/01)
+#After running count.py and comparison.py
+
 file_path:str = r""
 with open(file_path, 'r') as file:
     for line in file:
@@ -30,5 +34,6 @@ fig = px.treemap(df,
                  values='Changes', 
                  title='Treemap der Dateipfade basierend auf Änderungen')
 fig.update_traces(root_color="lightgrey")
+
 
 fig.show()

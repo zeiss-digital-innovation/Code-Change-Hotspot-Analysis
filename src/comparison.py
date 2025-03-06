@@ -1,11 +1,17 @@
 # John 3:16 
-older_data_file_path: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Data\data_older_2024.txt"
 
-newer_data_file_path: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Data\data_newer_2024.txt"
+#Data from the git log command before the set date (i.e 2024/01/01) 
+#after running count.py
+older_data_file_path: str = r""
+
+#Data from the git log command after the set date (i.e 2024/01/01)
+#after running count.py
+newer_data_file_path: str = r""
 
 #Creating a copy of the newer data set is recommended
 #Then use the path here
-copy_of_newer_data_path: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Data\copy_data_newer_2024.txt"
+copy_of_newer_data_path: str = r""
+
 
 with open(older_data_file_path, 'r') as file:
     older_data_paths_as_list: list[str] = []
