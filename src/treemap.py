@@ -77,7 +77,7 @@ def compare_data(file_names: list[str]):
             if line not in newer_data_paths_as_list:
                 file3.write(f"\n{line}: 0")
     
-    
+    return treemap_data_file_path
 
 
 def displaying_treemap(treemap_data_file_path: str):
