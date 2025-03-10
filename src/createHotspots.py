@@ -104,8 +104,8 @@ def displaying_treemap(treemap_data_file_path: str):
         df[f'Level {i + 1}'] = df['Path Components'].apply(lambda x: x[i] if i < len(x) else None)
     #i == 0 --> Level 1; i == max_depth_of_dir == 4 --> Level 5 
 
-    df['Colors'] = df['Changes'].apply(lambda x: 'green' if x == 1 else 'blue')
-
+    df['Colors'] = df['Changes'].apply(lambda x: '#ADDDE6' if x == 1 else '#F3A880')
+    
     print(df)
     
     path = [px.Constant("all")] + [f'Level {i}' for i in range(1, max_depth_of_dir + 1)]
@@ -114,7 +114,7 @@ def displaying_treemap(treemap_data_file_path: str):
                     values='Changes', 
                     title='Treemap der Dateipfade basierend auf Änderungen',
                     color='Colors',
-                    color_discrete_map={'green':'green', 'blue':'blue'})
+                    color_discrete_sequence=['#ADDDE6', '#F3A880'])
     fig.update_traces(root_color="lightgrey")
 
     fig.show()
