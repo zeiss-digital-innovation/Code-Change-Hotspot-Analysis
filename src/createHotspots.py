@@ -121,19 +121,9 @@ def displaying_treemap(treemap_data_file_path: str):
 
 # Running the actual script
 if __name__ == "__main__": 
-    if len(sys.argv) != 3:
-        print('Please provide 2 filenames as command line arguments.\n'
-            'The file containing the older data must be named first\n'
-            'Example: py createHotspots.py "old.txt" "new.txt"')
+    if len(sys.argv) != 1:
+        print('Please provide one absolute filepath to the repository as command line argument.\n'
+            'Example: py createHotspots.py "C:/path/to/repo"')
         sys.exit(1)
-
-    script_dir: str = os.path.dirname(os.path.abspath(__file__))
-    older_data_file_path: str = os.path.join(script_dir, sys.argv[1])
-    newer_data_file_path: str = os.path.join(script_dir, sys.argv[2])
-    print("Argv:", sys.argv)
-
-    file_names: list[str] = count_lines(older_data_file_path, newer_data_file_path)
-
-    treemap_data_file_path: str = compare_data(file_names)
-
-    displaying_treemap(treemap_data_file_path) 
+    
+    print("Path to repo:\n", sys.argv)
