@@ -2,11 +2,51 @@ import pandas as pd
 import plotly.express as px
 # needs to be downloaded
 
-import sys
-import os 
-import shutil
-import re
+import sys, os, re, shutil, datetime, subprocess
 from collections import Counter 
+
+
+sys.dont_write_bytecode = True
+
+def check_if_path_exists(path_to_repo: str):
+    if not os.path.exists(path_to_repo): 
+        print('The inputted path does not exist or contains errors.\n'
+              'Example: py createHotspots.py "C:/path/to/repo"\n\n'
+              f'Your input:\n\n{path_to_repo}')
+        
+        sys.exit(1)
+    else: 
+        return path_to_repo
+
+def check_date_format(date: str):
+    try:
+        y = datetime.datetime.strptime(date, "%Y-%m-%d")
+        return y.strftime("%Y-%m-%d")
+    except ValueError as e: 
+        print(f"Wrong date input: {date}\nExpected format: YYYY-MM-DD\n")
+        print(f"Error Message:\n{e}")
+
+
+def get_data(path_to_repo: str, date: str):
+    path_to_current_folder: str = os.getcwd()
+    older_data_file_path: str = os.path.join(path_to_current_folder, "old.txt")
+    newer_data_file_path: str = os.path.join(path_to_current_folder, "new.txt")
+    os.chdir(path=path_to_repo)
+    older_data = subprocess.run(['git', 'log', f'--before={date}', '--pretty=format:', '--name-only'], 
+                                capture_output=True, 
+                                text=True, 
+                                check=True)
+    
+    newer_data = subprocess.run(['git', 'log', f'--after={date}', '--pretty=format:', '--name-only'], 
+                                capture_output=True, 
+                                text=True, 
+                                check=True)
+    
+    with open(older_data_file_path, 'w') as file: 
+        file.write(older_data.stdout)
+
+    with open(newer_data_file_path, 'w') as file: 
+        file.write(newer_data.stdout)
 
 def count_lines(older_data_file_path: str, newer_data_file_path: str):
     
@@ -121,9 +161,9 @@ def displaying_treemap(treemap_data_file_path: str):
 
 # Running the actual script
 if __name__ == "__main__": 
-    if len(sys.argv) != 1:
-        print('Please provide one absolute filepath to the repository as command line argument.\n'
-            'Example: py createHotspots.py "C:/path/to/repo"')
+    if len(sys.argv) != 2:
+        print('Please first provide one absolute path to the repository and then a date(YYYY-MM-DD) as command line arguments.\n'
+            'Example: py createHotspots.py "C:/path/to/repo" "2024-02-01"')
         sys.exit(1)
     
-    print("Path to repo:\n", sys.argv)
+    
