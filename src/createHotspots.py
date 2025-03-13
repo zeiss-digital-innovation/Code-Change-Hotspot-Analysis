@@ -8,6 +8,10 @@ from collections import Counter
 
 sys.dont_write_bytecode = True
 
+#The path to the directory in which the user runs the script
+#Used for caching (creating the texfiles)
+path_to_starting_dir: str = os.getcwd()
+
 def check_if_path_exists(path_to_repo: str):
     if not os.path.exists(path_to_repo): 
         print('The inputted path does not exist or contains errors.\n'
@@ -26,13 +30,11 @@ def check_date_format(date: str):
         print(f"Wrong date input: {date}\nExpected format: YYYY-MM-DD\n")
         print(f"Error Message:\n{e}")
 
-
 def get_data(path_to_repo: str, date: str):
 
-    path_to_current_folder: str = os.getcwd()
-    older_data_file_path: str = os.path.join(path_to_current_folder, "old.txt")
-    newer_data_file_path: str = os.path.join(path_to_current_folder, "new.txt")
-    
+    older_data_file_path: str = os.path.join(path_to_starting_dir, "old.txt")
+    newer_data_file_path: str = os.path.join(path_to_starting_dir, "new.txt")
+
     os.chdir(path=path_to_repo)
     older_data = subprocess.run(['git', 'log', f'--before={date}', '--pretty=format:', '--name-only'], 
                                 capture_output=True, 
@@ -54,43 +56,49 @@ def get_data(path_to_repo: str, date: str):
 
 def count_lines(older_data_file_path: str, newer_data_file_path: str):
     
-    script_dir: str = os.path.dirname(os.path.abspath(__file__))
+    if os.stat(older_data_file_path).st_size == 0: 
+        print("There is an empty Textfile!\n"
+              "You might want to change the date to one closer to the present.\n\n"
+              f"Empty file:\n{older_data_file_path}")
+        sys.exit(1)
+    else:
+        with open(older_data_file_path, 'r') as file:        
+                # reads all lines and removes empty spaces and line breaks
+                older_data_lines = [line.strip() for line in file.readlines() if line.strip()] 
+                # Filers Special characters and keep only alphanumeric character
+                older_data_filtered_lines = [re.sub(r'[^a-zA-Z0-9\s\\\/\.]', '', line) for line in older_data_lines]
+                # Counts the occurences of every filtered line
+                older_data_line_counts = Counter(older_data_filtered_lines)
+                
+                older_data_output_filename = os.path.join(path_to_starting_dir, "older_counted.txt")
 
-    with open(older_data_file_path, 'r') as file:
+                with open(older_data_output_filename, 'w') as output_file:
+                    for line, count in older_data_line_counts.items():
+                        if line:  # Ensure the line is not empty
+                            output_file.write(f"{line}: {count}\n")
+
+    if os.stat(newer_data_file_path).st_size == 0: 
+        print("There is an empty Textfile!\n"
+              "You might want to change the date to one further away from the present.\n\n"
+              f"Empty file:\n{newer_data_file_path}")
+        sys.exit(1)
+    else:
+        with open(newer_data_file_path, 'r') as file:
             # reads all lines and removes empty spaces and line breaks
-            older_data_lines = [line.strip() for line in file.readlines() if line.strip()] 
+            newer_data_lines = [line.strip() for line in file.readlines() if line.strip()] 
             # Filers Special characters and keep only alphanumeric character
-            older_data_filtered_lines = [re.sub(r'[^a-zA-Z0-9\s\\\/\.]', '', line) for line in older_data_lines]
+            newer_data_filtered_lines = [re.sub(r'[^a-zA-Z0-9\s\\\/\.]', '', line) for line in newer_data_lines]
             # Counts the occurences of every filtered line
-            older_data_line_counts = Counter(older_data_filtered_lines)
-            
-            older_data_output_filename = os.path.join(script_dir, "older_counted.txt")
-
-            with open(older_data_output_filename, 'w') as output_file:
-                for line, count in older_data_line_counts.items():
-                    if line:  # Ensure the line is not empty
-                        output_file.write(f"{line}: {count}\n")
-
-    with open(newer_data_file_path, 'r') as file:
-        # reads all lines and removes empty spaces and line breaks
-        newer_data_lines = [line.strip() for line in file.readlines() if line.strip()] 
-        # Filers Special characters and keep only alphanumeric character
-        newer_data_filtered_lines = [re.sub(r'[^a-zA-Z0-9\s\\\/\.]', '', line) for line in newer_data_lines]
-        # Counts the occurences of every filtered line
-        newer_data_line_counts = Counter(newer_data_filtered_lines)
-            
-        newer_data_output_filename = os.path.join(script_dir,"newer_counted.txt")
+            newer_data_line_counts = Counter(newer_data_filtered_lines)
+                
+            newer_data_output_filename = os.path.join(path_to_starting_dir,"newer_counted.txt")
 
         with open(newer_data_output_filename, 'w') as output_file:
             for line, count in newer_data_line_counts.items():
                 if line:  # Ensure the line is not empty
                     output_file.write(f"{line}: {count}\n")
 
-    file_names: list[str] = []    
-    file_names.append(older_data_output_filename)
-    file_names.append(newer_data_output_filename)
-    
-    return file_names
+    return older_data_output_filename, newer_data_file_path
 
 
 def compare_data(file_names: list[str]):
