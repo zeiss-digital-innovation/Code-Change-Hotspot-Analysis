@@ -28,9 +28,11 @@ def check_date_format(date: str):
 
 
 def get_data(path_to_repo: str, date: str):
+
     path_to_current_folder: str = os.getcwd()
     older_data_file_path: str = os.path.join(path_to_current_folder, "old.txt")
     newer_data_file_path: str = os.path.join(path_to_current_folder, "new.txt")
+    
     os.chdir(path=path_to_repo)
     older_data = subprocess.run(['git', 'log', f'--before={date}', '--pretty=format:', '--name-only'], 
                                 capture_output=True, 
@@ -44,9 +46,11 @@ def get_data(path_to_repo: str, date: str):
     
     with open(older_data_file_path, 'w') as file: 
         file.write(older_data.stdout)
-
+    
     with open(newer_data_file_path, 'w') as file: 
         file.write(newer_data.stdout)
+    
+    return older_data_file_path, newer_data_file_path
 
 def count_lines(older_data_file_path: str, newer_data_file_path: str):
     
