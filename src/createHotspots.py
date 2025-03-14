@@ -34,6 +34,7 @@ def check_date_format(date: str):
     except ValueError as e:
         print(f"Wrong date input: {date}\nExpected format: YYYY-MM-DD\n")
         print(f"Error Message:\n{e}")
+        sys.exit(1)
 
 
 def get_data(path_to_repo: str, date: str):
@@ -130,10 +131,9 @@ def count_lines(older_data_file_path: str, newer_data_file_path: str):
 
 def compare_data(older_data_counted_file_path: str, newer_data_counted_file_path: str):
 
-    
     treemap_data_file_path: str = shutil.copyfile(
         src=newer_data_counted_file_path,
-        dst=os.path.join(path_to_starting_dir, "treemap_data.txt")
+        dst=os.path.join(path_to_starting_dir, "treemap_data.txt"),
     )
 
     # Creates the lists so only the paths are compared
@@ -202,9 +202,24 @@ def displaying_treemap(treemap_data_file_path: str):
 
 # Running the actual script
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         print(
             "Please first provide one absolute path to the repository and then a date(YYYY-MM-DD) as command line arguments.\n"
             'Example: py createHotspots.py "C:/path/to/repo" "2024-02-01"'
         )
         sys.exit(1)
+
+    path_to_repo: str = check_if_path_exists(path_to_repo=sys.argv[1])
+    date: str = check_date_format(date=sys.argv[2])
+    older_data_file_path, newer_data_file_path = get_data(
+        path_to_repo=path_to_repo, date=date
+    )
+    older_data_counted_file_path, newer_data_counted_file_path = count_lines(
+        older_data_file_path=older_data_file_path,
+        newer_data_file_path=newer_data_file_path,
+    )
+    treemap_data_file_path: str = compare_data(
+        older_data_counted_file_path=older_data_counted_file_path,
+        newer_data_counted_file_path=newer_data_counted_file_path,
+    )
+    displaying_treemap(treemap_data_file_path=treemap_data_file_path)
