@@ -42,4 +42,10 @@ class TestFunctions(unittest.TestCase):
         else: 
             self.assertTrue(check_older, f"{newer_data_output_file_path} might be non existent or empty!")
 
-        
+    def test_compare_data(self):
+        treemap_data_file_path: str = ch.compare_data(
+            older_data_counted_file_path="src/tests/data/old_counted.txt", newer_data_counted_file_path="src/tests/data/new_counted.txt"
+        )
+        check: bool = os.path.exists(treemap_data_file_path) and os.stat(treemap_data_file_path).st_size != 0
+        self.assertTrue(check)
+    
