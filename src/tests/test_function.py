@@ -1,4 +1,4 @@
-import sys
+import sys, os
 import unittest
 
 sys.dont_write_bytecode = True
@@ -19,4 +19,27 @@ class TestFunctions(unittest.TestCase):
             ch.count_lines("src/tests/data/old.txt", "src/tests/data/new_empty.txt")
 
         self.assertEqual(cm.exception.code, 1)
-    
+
+    def test_count_lines_older(self):
+        older_data_output_file_path, newer_data_output_file_path = ch.count_lines(
+            older_data_file_path="src/tests/data/old.txt", newer_data_file_path="src/tests/data/new.txt"
+        )
+
+        check_older:bool = os.path.exists(older_data_output_file_path) and os.stat(older_data_output_file_path).st_size > 0
+        if check_older:
+            self.assertTrue(check_older)
+        else: 
+            self.assertTrue(check_older, f"{older_data_output_file_path} might be non existent or empty!")
+
+    def test_count_lines_newer(self):
+        older_data_output_file_path, newer_data_output_file_path = ch.count_lines(
+            older_data_file_path="src/tests/data/old.txt", newer_data_file_path="src/tests/data/new.txt"
+        )
+
+        check_older:bool = os.path.exists(newer_data_output_file_path) and os.stat(newer_data_output_file_path).st_size > 0
+        if check_older:
+            self.assertTrue(check_older)
+        else: 
+            self.assertTrue(check_older, f"{newer_data_output_file_path} might be non existent or empty!")
+
+        
