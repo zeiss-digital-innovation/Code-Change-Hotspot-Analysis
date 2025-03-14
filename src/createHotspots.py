@@ -70,9 +70,9 @@ def count_lines(older_data_file_path: str, newer_data_file_path: str):
                 # Counts the occurences of every filtered line
                 older_data_line_counts = Counter(older_data_filtered_lines)
                 
-                older_data_output_filename = os.path.join(path_to_starting_dir, "older_counted.txt")
+                older_data_output_file_path = os.path.join(path_to_starting_dir, "older_counted.txt")
 
-                with open(older_data_output_filename, 'w') as output_file:
+                with open(older_data_output_file_path, 'w') as output_file:
                     for line, count in older_data_line_counts.items():
                         if line:  # Ensure the line is not empty
                             output_file.write(f"{line}: {count}\n")
@@ -91,14 +91,14 @@ def count_lines(older_data_file_path: str, newer_data_file_path: str):
             # Counts the occurences of every filtered line
             newer_data_line_counts = Counter(newer_data_filtered_lines)
                 
-            newer_data_output_filename = os.path.join(path_to_starting_dir,"newer_counted.txt")
+            newer_data_output_file_path = os.path.join(path_to_starting_dir,"newer_counted.txt")
 
-        with open(newer_data_output_filename, 'w') as output_file:
+        with open(newer_data_output_file_path, 'w') as output_file:
             for line, count in newer_data_line_counts.items():
                 if line:  # Ensure the line is not empty
                     output_file.write(f"{line}: {count}\n")
 
-    return older_data_output_filename, newer_data_file_path
+    return older_data_output_file_path, newer_data_output_file_path
 
 
 def compare_data(file_names: list[str]):
