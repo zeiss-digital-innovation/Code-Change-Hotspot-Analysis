@@ -7,6 +7,22 @@ sys.dont_write_bytecode = True
 import src.createHotspots as ch
 
 class TestData(unittest.TestCase): 
+    
+    def test_check_if_data_exists(self):
+        path_to_data: str = "src/tests/data/treemap_data.txt"
+        
+        check: bool = ch.check_if_data_exists(path_to_data=path_to_data)
+        
+        self.assertTrue(check, "Path seems to be nonexistent.")
+        
+    def test_check_if_data_exists_failure(self):
+        path_to_nonexistent_data: str = "src/tests/treemap_data.txt"
+        
+        check: bool = ch.check_if_data_exists(path_to_data=path_to_nonexistent_data)
+        
+        self.assertFalse(check, "Path seems to exist.")  
+        
+    
     def test_check_if_path_exists(self): 
         user_input: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Code-Change-Hotspot-Analysis"
         path_to_repo: str = ch.check_if_path_exists(user_input)

@@ -36,6 +36,9 @@ def check_date_format(date: str):
         print(f"Error Message:\n{e}")
         sys.exit(1)
 
+def check_if_data_exists(path_to_data: str):
+    
+    return os.path.exists(path_to_data)
 
 def get_data(path_to_repo: str, date: str):
 
