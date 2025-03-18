@@ -14,7 +14,7 @@ sys.dont_write_bytecode = True
 path_to_starting_dir: str = os.getcwd()
 
 
-def check_if_path_exists(path_to_repo: str):
+def check_if_directory_exists(path_to_repo: str):
     if not os.path.exists(path_to_repo):
         print(
             "The inputted path does not exist or contains errors.\n"
@@ -212,7 +212,7 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    path_to_repo: str = check_if_path_exists(path_to_repo=sys.argv[1])
+    path_to_repo: str = check_if_directory_exists(path_to_repo=sys.argv[1])
     date: str = check_date_format(date=sys.argv[2])
     older_data_file_path, newer_data_file_path = get_data(
         path_to_repo=path_to_repo, date=date
