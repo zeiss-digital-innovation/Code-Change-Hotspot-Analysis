@@ -49,3 +49,12 @@ class TestFunctions(unittest.TestCase):
         check: bool = os.path.exists(treemap_data_file_path) and os.stat(treemap_data_file_path).st_size != 0
         self.assertTrue(check)
     
+    def test_displaying_treemap(self):
+        try: 
+            ch.displaying_treemap(treemap_data_file_path="src/tests/data/treemap_data.txt")
+            
+        except Exception as e: 
+            self.fail(f"An exception was raised by displaying_treemap:\n{e}")
+        
+        self.assertTrue(True, "No exception was raised. Check your browser.")
+    
