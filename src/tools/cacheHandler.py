@@ -5,30 +5,23 @@ sys.dont_write_bytecode = True
 
 def check_if_file_exists(file_name: str):
 
-    return os.path.exists(create_path_to_data(file_name))
+    return os.path.exists(create_path_to_file(file_name))
 
 
-def create_path_to_data(file_name: str):
-    path_to_starting_dir: str = os.getcwd()
-    return os.path.join(path_to_starting_dir, file_name)
+def create_path_to_file(file_name: str):
+    path_to_current_dir: str = os.getcwd()
+    return os.path.join(path_to_current_dir, file_name)
 
 
 def delete_file(file_name: str):
-    '''
-    Returns the names of the files that could not be deleted.
-    If the list is empty all files are deleted. 
-    '''
-    path_to_current_dir: str = os.getcwd()
-    try: 
-        os.remove(os.path.join(path_to_current_dir, file_name))
+    try:
+        os.remove(create_path_to_file(file_name))
         deleted_files.append(file_name)
     except FileNotFoundError as e:
         print(f"{file_name} File was not found")
-            
-    except OSError as e: 
+
+    except OSError as e:
         print(f"{file_name} could not be removed. You cannot remove directories.")
-            
-    
 
 
 parser = argparse.ArgumentParser(
@@ -65,50 +58,52 @@ cache: list[str] = [
 if args.delete:
     d = args.delete
     false_inputs: list[str] = []
-    deleted_files:list[str] = []
+    deleted_files: list[str] = []
     no_inputs: bool = False
-    
+
     # check if user made any imputs
     counter_empty_lists: int = 0
     for i in range(0, len(d)):
-            if len(d[i]) == 0:
-                counter_empty_lists +=1
-                continue
-            else: 
-                continue
+        if len(d[i]) == 0:
+            counter_empty_lists += 1
+            continue
+        else:
+            continue
     if counter_empty_lists == len(d):
         no_inputs = True
-        
-    if no_inputs: 
-        #TODO Add logic to delete all existing cache files in cwd
+
+    if no_inputs:
+        # TODO Add logic to delete all existing cache files in cwd
         for name in cache:
             if check_if_file_exists(name):
                 delete_file(name)
             else:
-                continue       
+                continue
     else:
         for i in range(0, len(d)):
-            if len(d[i]) != 0: 
+            if len(d[i]) != 0:
                 for name in d[i]:
-                    if check_if_file_exists(name) and name in cache: # Condition so that only cache files are deleted
+                    if (
+                        check_if_file_exists(name) and name in cache
+                    ):  # Condition so that only cache files are deleted
                         delete_file(file_name=name)
                     else:
                         false_inputs.append(name)
             else:
                 continue
-                    
+
     # How many files are actually deleted
     # Lists which are deleted
-    if len(deleted_files) > 0:     
+    if len(deleted_files) > 0:
         print(f"\n{len(deleted_files)} file(s) will be deleted:")
         for name in deleted_files:
             print(f"{name}")
-    else: 
+    else:
         print("\nNo files have been deleted.")
-    # Prints which files could not be found e.g: because of typo 
+    # Prints which files could not be found e.g: because of typo
     if len(false_inputs) > 0:
         print(f"\n{len(false_inputs)} file(s) could not be found:")
         for name in false_inputs:
             print(name)
-    
+
     print("\nDONE.")
