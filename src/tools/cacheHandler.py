@@ -25,7 +25,7 @@ def delete_file(file_name: str):
 
 
 parser = argparse.ArgumentParser(
-    description="A script that either deletes or keeps cache files created by createHotspots.py",
+    description=f"A script that either deletes or keeps cache files created by createHotspots.py",
     usage="cacheHandler.py [-h] [-d file_name | -k file_name ]",
 )
 
@@ -48,6 +48,7 @@ args = parser.parse_args()
 # If no Inputs are given
 if len(sys.argv) == 1:
     parser.print_help()
+
 cache: list[str] = [
     "old.txt",
     "new.txt",
@@ -55,6 +56,7 @@ cache: list[str] = [
     "newer_counted.txt",
     "treemap_data.txt",
 ]
+
 if args.delete:
     d = args.delete
     false_inputs: list[str] = []
@@ -99,7 +101,11 @@ if args.delete:
         for name in deleted_files:
             print(f"{name}")
     else:
-        print("\nNo files have been deleted.")
+        print(
+            "\nNo files have been deleted.\n"
+            "Possible Reasosns:\nTypo in inputs\nFile not registered as cache from createHotspots.py (-h for more info)\n"
+            "No cache existing"
+        )
     # Prints which files could not be found e.g: because of typo
     if len(false_inputs) > 0:
         print(f"\n{len(false_inputs)} file(s) could not be found:")
