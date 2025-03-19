@@ -3,7 +3,7 @@ import plotly.express as px
 
 # needs to be downloaded
 
-import sys, os, re, shutil, datetime, subprocess
+import sys, os, re, shutil, datetime, subprocess, timeit
 from collections import Counter
 
 
@@ -14,7 +14,7 @@ sys.dont_write_bytecode = True
 path_to_starting_dir: str = os.getcwd()
 
 
-def check_if_path_exists(path_to_repo: str):
+def check_if_directory_exists(path_to_repo: str):
     if not os.path.exists(path_to_repo):
         print(
             "The inputted path does not exist or contains errors.\n"
@@ -35,6 +35,15 @@ def check_date_format(date: str):
         print(f"Wrong date input: {date}\nExpected format: YYYY-MM-DD\n")
         print(f"Error Message:\n{e}")
         sys.exit(1)
+
+
+def check_if_data_exists(file_name: str):
+
+    return os.path.exists(create_path_to_data(file_name))
+
+
+def create_path_to_data(file_name: str):
+    return os.path.join(path_to_starting_dir, file_name)
 
 
 def get_data(path_to_repo: str, date: str):
@@ -193,12 +202,68 @@ def displaying_treemap(treemap_data_file_path: str):
         values="Changes",
         title="Treemap der Dateipfade basierend auf Änderungen",
         color="Colors",
-        color_discrete_sequence=["#CAEDFB","#FAE2D6","#F2F2F2" ],
+        color_discrete_sequence=["#CAEDFB", "#FAE2D6", "#F2F2F2"],
     )
     fig.update_traces(root_color="lightgrey")
 
     fig.show()
 
+
+def script():
+    path_to_repo: str = check_if_directory_exists(path_to_repo=sys.argv[1])
+    date: str = check_date_format(date=sys.argv[2])
+
+    if check_if_data_exists("treemap_data.txt"):
+        print(
+            f"Found path to treemap data:\n\n{create_path_to_data("treemap_data.txt")}\n\n"
+            "Skipping 3/3 steps..."
+        )
+        displaying_treemap(
+            treemap_data_file_path=create_path_to_data("treemap_data.txt")
+        )
+
+    elif check_if_data_exists("newer_counted.txt") and check_if_data_exists("older_counted.txt"):
+        print(
+            f"Found path to newer_counted data:\n\n{create_path_to_data("newer_counted.txt")}\n\n"
+            f"And found path to older_counted data:\n\n{create_path_to_data("older_counted.txt")}\n\n"
+            "Skipping 2/3 steps..."
+        )
+        treemap_data_file_path: str = compare_data(
+            older_data_counted_file_path=create_path_to_data("older_counted.txt"),
+            newer_data_counted_file_path=create_path_to_data("newer_data.txt"),
+        )
+        displaying_treemap(treemap_data_file_path=treemap_data_file_path)
+
+    elif check_if_data_exists("new.txt") and check_if_data_exists("old.txt"):
+        print(
+            f"Found path to new data:\n\n{create_path_to_data("new.txt")}\n\n"
+            f"And found path to old data:\n\n{create_path_to_data("old.txt")}\n\n"
+            "Skipping 1/3 steps..."
+        )
+        older_data_counted_file_path, newer_data_counted_file_path = count_lines(
+            older_data_file_path=create_path_to_data("old.txt"),
+            newer_data_file_path=create_path_to_data("new.txt"),
+        )
+        treemap_data_file_path: str = compare_data(
+            older_data_counted_file_path=older_data_counted_file_path,
+            newer_data_counted_file_path=newer_data_counted_file_path,
+        )
+        displaying_treemap(treemap_data_file_path=treemap_data_file_path)
+    
+    else: 
+        print("Found no data.\nSkipping 0/3 steps")
+        older_data_file_path, newer_data_file_path = get_data(
+        path_to_repo=path_to_repo, date=date
+        )
+        older_data_counted_file_path, newer_data_counted_file_path = count_lines(
+            older_data_file_path=older_data_file_path,
+            newer_data_file_path=newer_data_file_path,
+        )
+        treemap_data_file_path: str = compare_data(
+            older_data_counted_file_path=older_data_counted_file_path,
+            newer_data_counted_file_path=newer_data_counted_file_path,
+        )
+        displaying_treemap(treemap_data_file_path=treemap_data_file_path)
 
 # Running the actual script
 if __name__ == "__main__":
@@ -209,17 +274,5 @@ if __name__ == "__main__":
         )
         sys.exit(1)
 
-    path_to_repo: str = check_if_path_exists(path_to_repo=sys.argv[1])
-    date: str = check_date_format(date=sys.argv[2])
-    older_data_file_path, newer_data_file_path = get_data(
-        path_to_repo=path_to_repo, date=date
-    )
-    older_data_counted_file_path, newer_data_counted_file_path = count_lines(
-        older_data_file_path=older_data_file_path,
-        newer_data_file_path=newer_data_file_path,
-    )
-    treemap_data_file_path: str = compare_data(
-        older_data_counted_file_path=older_data_counted_file_path,
-        newer_data_counted_file_path=newer_data_counted_file_path,
-    )
-    displaying_treemap(treemap_data_file_path=treemap_data_file_path)
+execution_time = timeit.timeit(script, number=1)  # number specifies how many times to run the function
+print(f"Execution time: {execution_time:.2f} seconds")
