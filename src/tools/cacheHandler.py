@@ -58,10 +58,24 @@ cache: list[str] = [
 ]
 
 if args.delete:
+    # d is a list of lists, depending on how many times parameter -d or --delete is given
+    # example: py ... -d "foo.txt" "baz.txt" --delete "god_is_good.txt" --> [['foo.txt', 'baz.txt'], ['god_is_good.txt']]
     d = args.delete
+    existing_cache: list[str] = [name for name in cache if check_if_file_exists(name)]
     false_inputs: list[str] = []
     deleted_files: list[str] = []
     no_inputs: bool = False
+
+    # lists the existing cache:
+    if len(existing_cache) > 0:
+        print(f"\nCache files found: {len(existing_cache)}") 
+        for name in existing_cache:
+            print(f"{name}")
+    else: 
+        print("\nNo cache found")
+        print("\n\nDONE.")
+        sys.exit(0)
+        
 
     # check if user made any imputs
     counter_empty_lists: int = 0
@@ -73,9 +87,9 @@ if args.delete:
             continue
     if counter_empty_lists == len(d):
         no_inputs = True
-
+    
+    # Deletion logic
     if no_inputs:
-        # TODO Add logic to delete all existing cache files in cwd
         for name in cache:
             if check_if_file_exists(name):
                 delete_file(name)
@@ -93,9 +107,90 @@ if args.delete:
                         false_inputs.append(name)
             else:
                 continue
+            
+    # Prints which files could not be found e.g: because of typo
+    if len(false_inputs) > 0:
+        print(f"\n{len(false_inputs)} file(s) could not be found:")
+        for name in false_inputs:
+            print(name)
 
     # How many files are actually deleted
-    # Lists which are deleted
+    # Lists which files are deleted
+    if len(deleted_files) > 0:
+        print(f"\n{len(deleted_files)} cache file(s) will be deleted:")
+        for name in deleted_files:
+            print(f"{name}")
+    else:
+        print(
+            "\nNo files have been deleted.\n"
+            "Possible Reasons:\nTypo in inputs\nFile not registered as cache from createHotspots.py (-h for more info)\n"
+            "No cache existing"
+        )
+    
+    print("\nDONE.")
+
+if args.keep:
+    # k is a list of lists, depending on how many times parameter -k or --keep is given
+    # example: py ... -k "foo.txt" "baz.txt" --keep "god_is_good.txt" --> [['foo.txt', 'baz.txt'], ['god_is_good.txt']]
+    k = args.keep
+    existing_cache: list[str] = [name for name in cache if check_if_file_exists(name)]
+    false_inputs: list[str] = []
+    kept_files: list[str] = []
+    deleted_files: list[str] = []
+    no_inputs: bool = False
+
+    # lists the existing cache:
+    if len(existing_cache) > 0:
+        print(f"\nCache files found: {len(existing_cache)}") 
+        for name in existing_cache:
+            print(f"{name}")
+    else: 
+        print("\nNo cache found")
+        print("\n\nDONE.")
+        sys.exit(0)
+
+    # check if user made any imputs
+    counter_empty_lists: int = 0
+    for i in range(0, len(k)):
+        if len(k[i]) == 0:
+            counter_empty_lists += 1
+            continue
+        else:
+            continue
+    if counter_empty_lists == len(k):
+        no_inputs = True
+
+    if no_inputs:
+        print("\nNo inputs given.\nNo files will be deleted!")
+        sys.exit(0)
+        print("\nDONE.")
+    # Deletion logic 
+    else:  # used to determine which files should be deleted
+        for i in range(0, len(k)):
+            if len(k[i]) != 0:
+                for name in k[i]:
+                    if check_if_file_exists(name) and name in existing_cache:
+                        kept_files.append(name)
+                        existing_cache.remove(name) 
+                    else:
+                        false_inputs.append(name)
+        for name in existing_cache:
+            delete_file(name)
+    
+    # Lists which files are kept
+    if len(kept_files) > 0: 
+        print(f"\n{len(kept_files)} cache file(s) saved through input:")
+        for name in kept_files:
+            print(name)
+    
+    # Prints which files could not be found e.g: because of typo
+    if len(false_inputs) > 0:
+        print(f"\n{len(false_inputs)} file(s) could not be found:")
+        for name in false_inputs:
+            print(name)
+            
+    # How many files are actually deleted
+    # Lists which files are deleted
     if len(deleted_files) > 0:
         print(f"\n{len(deleted_files)} file(s) will be deleted:")
         for name in deleted_files:
@@ -103,13 +198,9 @@ if args.delete:
     else:
         print(
             "\nNo files have been deleted.\n"
-            "Possible Reasosns:\nTypo in inputs\nFile not registered as cache from createHotspots.py (-h for more info)\n"
-            "No cache existing"
+            "Possible Reasons:\n"
+            "Files saved through input"
         )
-    # Prints which files could not be found e.g: because of typo
-    if len(false_inputs) > 0:
-        print(f"\n{len(false_inputs)} file(s) could not be found:")
-        for name in false_inputs:
-            print(name)
 
     print("\nDONE.")
+    
