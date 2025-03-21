@@ -24,9 +24,18 @@ def delete_file(file_name: str):
         print(f"{file_name} could not be removed. You cannot remove directories.")
 
 
+cache: list[str] = [
+    "old.txt",
+    "new.txt",
+    "older_counted.txt",
+    "newer_counted.txt",
+    "treemap_data.txt",
+]
+
 parser = argparse.ArgumentParser(
     description=f"A script that either deletes or keeps cache files created by createHotspots.py",
     usage="cacheHandler.py [-h] [-d file_name | -k file_name ]",
+    epilog=f"Possible cache files:{cache} "
 )
 
 group = parser.add_mutually_exclusive_group()
@@ -49,13 +58,6 @@ args = parser.parse_args()
 if len(sys.argv) == 1:
     parser.print_help()
 
-cache: list[str] = [
-    "old.txt",
-    "new.txt",
-    "older_counted.txt",
-    "newer_counted.txt",
-    "treemap_data.txt",
-]
 
 if args.delete:
     # d is a list of lists, depending on how many times parameter -d or --delete is given
