@@ -228,6 +228,8 @@ def script():
     path_to_repo: str = check_if_directory_exists(path_to_repo=sys.argv[1])
     date: str = check_date_format(date=sys.argv[2])
 
+    #Checks first if treemap data exists
+    #because it saves more time if treemap data actually exists
     if check_if_data_exists("treemap_data.txt"):
         print(
             f"Found path to treemap data:\n\n{create_path_to_data("treemap_data.txt")}\n\n"
