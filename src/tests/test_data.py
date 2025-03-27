@@ -8,8 +8,11 @@ import src.createHotspots as ch
 
 class TestData(unittest.TestCase): 
 #Testing the args user has given 
-    #Tests not seperated by '-------------' test the same function      
-    def test_check_if_directory_exists(self): 
+    #Tests not seperated by '-------------' test the same function     
+    @unittest.skip("requires mocking") 
+    def test_check_if_directory_exists(self):
+        #TODO: Add mocking because repo does not exists on vm and other machines
+
         user_input: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Code-Change-Hotspot-Analysis"
         
         path_to_repo: str = ch.check_if_directory_exists(path_to_repo=user_input)
@@ -53,7 +56,10 @@ class TestData(unittest.TestCase):
         self.assertFalse(check)  
 
 #Testing the git log commands run automatically 
+    @unittest.skip("requires mocking")
     def test_get_data(self):
+        #TODO: Add mocking because repo does not exists on vm and other machines 
+
         user_input: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Code-Change-Hotspot-Analysis"
         ch.get_data(user_input, date="2024-01-01")
         path_to_current_folder: str = os.getcwd()
