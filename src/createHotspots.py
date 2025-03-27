@@ -18,16 +18,12 @@ parser = argparse.ArgumentParser(
     "It does a Hotspot analysis based on the "
     "data recieved from the git log history (number of changes on each file) of the local repository. "
     "The date given as the second argument acts as a border between the recently edited and legacy code. ",
-    epilog='More info: https://github.com/zeiss-digital-innovation/Code-Change-Hotspot-Analysis'
+    epilog="More info: https://github.com/zeiss-digital-innovation/Code-Change-Hotspot-Analysis",
 )
-parser.add_argument('repo', help='Example: "C:/path/to/local/repo"')
-parser.add_argument('date', help='Format: YYYY-MM-DD e.g. "2024-02-01"')
-args = parser.parse_args(["C:/path/to/repo", "2024-02-01"])
-print(args)
-repo: str = args.repo 
-print(repo)
-date: str = args.date
-print(date)
+parser.add_argument("repo", help='Example: "C:/path/to/local/repo"')
+parser.add_argument("date", help='Format: YYYY-MM-DD e.g. "2024-02-01"')
+args = parser.parse_args()
+
 
 def check_if_directory_exists(path_to_repo: str):
     if not os.path.exists(path_to_repo):
@@ -225,11 +221,11 @@ def displaying_treemap(treemap_data_file_path: str):
 
 
 def script():
-    path_to_repo: str = check_if_directory_exists(path_to_repo=sys.argv[1])
-    date: str = check_date_format(date=sys.argv[2])
+    path_to_repo: str = check_if_directory_exists(path_to_repo=args.repo)
+    date: str = check_date_format(date=args.date)
 
-    #Checks first if treemap data exists
-    #because it saves more time if treemap data actually exists
+    # Checks first if treemap data exists
+    # because it saves more time if treemap data actually exists
     if check_if_data_exists("treemap_data.txt"):
         print(
             f"Found path to treemap data:\n\n{create_path_to_data("treemap_data.txt")}\n\n"
@@ -287,14 +283,12 @@ def script():
 
 # Running the actual script
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(
-            "Please first provide one absolute path to the repository and then a date(YYYY-MM-DD) as command line arguments.\n"
-            'Example: py createHotspots.py "C:/path/to/repo" "2024-02-01"'
-        )
-        sys.exit(1)
 
-execution_time = timeit.timeit(
-    script, number=1
-)  # number specifies how many times to run the function
-print(f"Execution time: {execution_time:.2f} seconds")
+    if len(sys.argv) == 1:
+        parser.print_help()
+
+    if args.repo and args.date:
+        execution_time = timeit.timeit(
+            script, number=1
+        )  # number specifies how many times to run the function
+        print(f"Execution time: {execution_time:.2f} seconds")
