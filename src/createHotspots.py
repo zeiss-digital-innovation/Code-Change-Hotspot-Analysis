@@ -22,7 +22,6 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("repo", help='Example: "C:/path/to/local/repo"')
 parser.add_argument("date", help='Format: YYYY-MM-DD e.g. "2024-02-01"')
-args = parser.parse_args()
 
 
 def check_if_directory_exists(path_to_repo: str):
@@ -283,6 +282,8 @@ def script():
 
 # Running the actual script
 if __name__ == "__main__":
+
+    args = parser.parse_args()
 
     if len(sys.argv) == 1:
         parser.print_help()

@@ -29,4 +29,4 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi  # Installs dependencies if requirements.txt exists
 
       - name: Run Unit Tests
-        run: python -m unittest discover  # Runs unittests instead of pytest
+        run: python -m unittest discover -s . # Runs unittests from current directory 

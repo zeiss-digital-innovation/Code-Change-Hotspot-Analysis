@@ -31,9 +31,10 @@ class TestData(unittest.TestCase):
         self.assertEqual(result, "2024-02-01")
 
     def test_check_date_format_faliure(self): 
-        result = ch.check_date_format(date="01/01/2024")
+        with self.assertRaises(SystemExit) as cm:
+            ch.check_date_format(date="01/01/2024")
         
-        self.assertNotEqual(result, "01/01/2024")
+        self.assertEqual(cm.exception.code, 1)
  
 #Testing if a path to a textfile containing data exists        
     # -------------    
