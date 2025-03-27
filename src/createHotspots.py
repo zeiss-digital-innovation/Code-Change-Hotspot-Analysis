@@ -3,7 +3,7 @@ import plotly.express as px
 
 # needs to be downloaded
 
-import sys, os, re, shutil, datetime, subprocess, timeit
+import sys, os, re, shutil, datetime, subprocess, timeit, argparse
 from collections import Counter
 
 
@@ -12,6 +12,17 @@ sys.dont_write_bytecode = True
 # The path to the directory in which the user runs the script
 # Used for caching (creating the texfiles)
 path_to_starting_dir: str = os.getcwd()
+
+parser = argparse.ArgumentParser(
+    description="A script that displays a interactive treemap in the web-browser. "
+    "It does a Hotspot analysis based on the "
+    "data recieved from the git log history (number of changes on each file) of the local repository. "
+    "The date given as the second argument acts as a border between the recently edited and legacy code. ",
+    epilog="More info: https://github.com/zeiss-digital-innovation/Code-Change-Hotspot-Analysis",
+)
+parser.add_argument("repo", help='Example: "C:/path/to/local/repo"')
+parser.add_argument("date", help='Format: YYYY-MM-DD e.g. "2024-02-01"')
+args = parser.parse_args()
 
 
 def check_if_directory_exists(path_to_repo: str):
@@ -210,9 +221,11 @@ def displaying_treemap(treemap_data_file_path: str):
 
 
 def script():
-    path_to_repo: str = check_if_directory_exists(path_to_repo=sys.argv[1])
-    date: str = check_date_format(date=sys.argv[2])
+    path_to_repo: str = check_if_directory_exists(path_to_repo=args.repo)
+    date: str = check_date_format(date=args.date)
 
+    # Checks first if treemap data exists
+    # because it saves more time if treemap data actually exists
     if check_if_data_exists("treemap_data.txt"):
         print(
             f"Found path to treemap data:\n\n{create_path_to_data("treemap_data.txt")}\n\n"
@@ -222,7 +235,9 @@ def script():
             treemap_data_file_path=create_path_to_data("treemap_data.txt")
         )
 
-    elif check_if_data_exists("newer_counted.txt") and check_if_data_exists("older_counted.txt"):
+    elif check_if_data_exists("newer_counted.txt") and check_if_data_exists(
+        "older_counted.txt"
+    ):
         print(
             f"Found path to newer_counted data:\n\n{create_path_to_data("newer_counted.txt")}\n\n"
             f"And found path to older_counted data:\n\n{create_path_to_data("older_counted.txt")}\n\n"
@@ -249,11 +264,11 @@ def script():
             newer_data_counted_file_path=newer_data_counted_file_path,
         )
         displaying_treemap(treemap_data_file_path=treemap_data_file_path)
-    
-    else: 
+
+    else:
         print("Found no data.\nSkipping 0/3 steps")
         older_data_file_path, newer_data_file_path = get_data(
-        path_to_repo=path_to_repo, date=date
+            path_to_repo=path_to_repo, date=date
         )
         older_data_counted_file_path, newer_data_counted_file_path = count_lines(
             older_data_file_path=older_data_file_path,
@@ -265,14 +280,15 @@ def script():
         )
         displaying_treemap(treemap_data_file_path=treemap_data_file_path)
 
+
 # Running the actual script
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(
-            "Please first provide one absolute path to the repository and then a date(YYYY-MM-DD) as command line arguments.\n"
-            'Example: py createHotspots.py "C:/path/to/repo" "2024-02-01"'
-        )
-        sys.exit(1)
 
-execution_time = timeit.timeit(script, number=1)  # number specifies how many times to run the function
-print(f"Execution time: {execution_time:.2f} seconds")
+    if len(sys.argv) == 1:
+        parser.print_help()
+
+    if args.repo and args.date:
+        execution_time = timeit.timeit(
+            script, number=1
+        )  # number specifies how many times to run the function
+        print(f"Execution time: {execution_time:.2f} seconds")
