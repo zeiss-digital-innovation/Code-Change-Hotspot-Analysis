@@ -6,7 +6,10 @@ A file is regarded as a cold- or hotspot, depending on the date the change on th
 **Hotspots** are files that have recently been changed, meaning changes on the file that have been commited after the refernce date.   
 **Coldspots** are files that have not been changed recently, meaning there are no changes commited after the reference date. 
 
-EXAMPLE MISSING
+Example on how a treemap might look like using pseudo data: 
+
+![treemap_example_1_png](images/treemap_example_1.png)
+![treemap_example_2_png](images/treemap_example_2.png)
 
 ### Main Features
 ### Target Audience 
