@@ -244,7 +244,7 @@ def script():
         )
         treemap_data_file_path: str = compare_data(
             older_data_counted_file_path=create_path_to_data("older_counted.txt"),
-            newer_data_counted_file_path=create_path_to_data("newer_data.txt"),
+            newer_data_counted_file_path=create_path_to_data("newer_counted.txt"),
         )
         displaying_treemap(treemap_data_file_path=treemap_data_file_path)
 
