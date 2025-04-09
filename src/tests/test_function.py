@@ -44,7 +44,7 @@ class TestFunctions(unittest.TestCase):
 
     def test_compare_data(self):
         treemap_data_file_path: str = ch.compare_data(
-            older_data_counted_file_path="src/tests/data/old_counted.txt", newer_data_counted_file_path="src/tests/data/new_counted.txt"
+            older_data_counted_file_path="src/tests/data/older_counted.txt", newer_data_counted_file_path="src/tests/data/newer_counted.txt"
         )
         check: bool = os.path.exists(treemap_data_file_path) and os.stat(treemap_data_file_path).st_size != 0
         self.assertTrue(check)
