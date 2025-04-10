@@ -10,20 +10,17 @@ class TestData(unittest.TestCase):
 #Testing the args user has given 
     #Tests not seperated by '-------------' test the same function     
     @unittest.skip("requires mocking") 
-    def test_check_if_directory_exists(self):
+    def test_directory_exists(self):
         #TODO: Add mocking because repo does not exists on vm and other machines
 
         user_input: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Code-Change-Hotspot-Analysis"
         self.assertEqual(True, ch.directory_exists(path_to_repo=user_input))
     
-    def test_check_if_directory_exists_faliure(self):
+    def test_directory_exists_faliure(self):
     #TODO: has to be rewritten
         user_input: str = r"C:\this\is\a\nonexistent\path"
         
-        with self.assertRaises(SystemExit) as cm:
-            ch.directory_exists(path_to_repo=user_input)
-            
-        self.assertEqual(cm.exception.code, 1)
+        self.assertFalse(ch.directory_exists(path_to_repo=user_input))
         
     # -------------
     def test_date_format_correct(self):
