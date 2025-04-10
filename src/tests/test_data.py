@@ -10,48 +10,40 @@ class TestData(unittest.TestCase):
 #Testing the args user has given 
     #Tests not seperated by '-------------' test the same function     
     @unittest.skip("requires mocking") 
-    def test_check_if_directory_exists(self):
+    def test_directory_exists(self):
         #TODO: Add mocking because repo does not exists on vm and other machines
 
         user_input: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Code-Change-Hotspot-Analysis"
-        
-        path_to_repo: str = ch.check_if_directory_exists(path_to_repo=user_input)
-
-        self.assertEqual(user_input, path_to_repo)
-
-    def test_check_if_directory_exists_faliure(self):
+        self.assertEqual(True, ch.directory_exists(path_to_repo=user_input))
+    
+    def test_directory_exists_faliure(self):
+    #TODO: has to be rewritten
         user_input: str = r"C:\this\is\a\nonexistent\path"
         
-        with self.assertRaises(SystemExit) as cm:
-            ch.check_if_directory_exists(path_to_repo=user_input)
-            
-        self.assertEqual(cm.exception.code, 1)
+        self.assertFalse(ch.directory_exists(path_to_repo=user_input))
         
     # -------------
-    def test_check_date_format(self):
-        result = ch.check_date_format(date="2024-02-01")
+    def test_date_format_correct(self):
+        self.assertTrue(ch.date_format_correct(date="2024-02-01"))
         
-        self.assertEqual(result, "2024-02-01")
-
-    def test_check_date_format_faliure(self): 
-        with self.assertRaises(SystemExit) as cm:
-            ch.check_date_format(date="01/01/2024")
+    def test_date_format_correct_faliure(self): 
+        self.assertFalse(ch.date_format_correct(date="01/01/2024"))
         
-        self.assertEqual(cm.exception.code, 1)
+        
  
 #Testing if a path to a textfile containing data exists        
     # -------------    
-    def test_check_if_data_exists(self):
+    def test_data_exists(self):
         path_to_data: str = "src/tests/data/treemap_data.txt"
         
-        check: bool = ch.check_if_data_exists(file_name=path_to_data)
+        check: bool = ch.data_exists(file_path=path_to_data)
         
         self.assertTrue(check)
         
-    def test_check_if_data_exists_failure(self):
+    def test_data_exists_failure(self):
         path_to_nonexistent_data: str = "path/to/nonexistentdata"
         
-        check: bool = ch.check_if_data_exists(file_name=path_to_nonexistent_data)
+        check: bool = ch.data_exists(file_path=path_to_nonexistent_data)
         
         self.assertFalse(check)  
 

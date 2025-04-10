@@ -8,11 +8,11 @@ from collections import Counter
 
 
 sys.dont_write_bytecode = True
-
 # The path to the directory in which the user runs the script
 # Used for caching (creating the texfiles)
-path_to_starting_dir: str = os.getcwd()
-
+# might be overwritten with the repo path from user input
+path_to_starting_dir: str = os.getcwd() 
+    
 parser = argparse.ArgumentParser(
     description="A script that displays a interactive treemap in the web-browser. "
     "It does a Hotspot analysis based on the "
@@ -20,39 +20,37 @@ parser = argparse.ArgumentParser(
     "The date given as the second argument acts as a border between the recently edited and legacy code. ",
     epilog="More info: https://github.com/zeiss-digital-innovation/Code-Change-Hotspot-Analysis",
 )
-parser.add_argument("repo", help='Example: "C:/path/to/local/repo"')
 parser.add_argument("date", help='Format: YYYY-MM-DD e.g. "2024-02-01"')
+parser.add_argument("repo", help='Example: "C:/path/to/local/repo"')
 
 
-def check_if_directory_exists(path_to_repo: str):
-    if not os.path.exists(path_to_repo):
+def directory_exists(path_to_repo: str) -> bool:
+    if os.path.exists(path_to_repo):
+        return True
+    else:
         print(
             "The inputted path does not exist or contains errors.\n"
-            'Example: py createHotspots.py "C:/path/to/repo"\n\n'
+            'Example: py createHotspots.py "C:/path/to/repo" "2034-02-22"\n\n'
             f"Your input:\n\n{path_to_repo}"
         )
-
-        sys.exit(1)
-    else:
-        return path_to_repo
+        return False
 
 
-def check_date_format(date: str):
+def date_format_correct(date: str) -> bool:
     try:
         y = datetime.datetime.strptime(date, "%Y-%m-%d")
-        return y.strftime("%Y-%m-%d")
+        return True
     except ValueError as e:
         print(f"Wrong date input: {date}\nExpected format: YYYY-MM-DD\n")
         print(f"Error Message:\n{e}")
-        sys.exit(1)
+        return False
 
+# both functions typically used to test if data (cache) files exist
+def data_exists(file_path: str) -> bool:
+    return os.path.exists(create_path_to_data(file_path))
 
-def check_if_data_exists(file_name: str):
-
-    return os.path.exists(create_path_to_data(file_name))
-
-
-def create_path_to_data(file_name: str):
+# os.getcwd() can change thats why it is using path_to_starting_dir
+def create_path_to_data(file_name: str) -> str:
     return os.path.join(path_to_starting_dir, file_name)
 
 
@@ -220,12 +218,9 @@ def displaying_treemap(treemap_data_file_path: str):
 
 
 def script():
-    path_to_repo: str = check_if_directory_exists(path_to_repo=args.repo)
-    date: str = check_date_format(date=args.date)
-
     # Checks first if treemap data exists
     # because it saves more time if treemap data actually exists
-    if check_if_data_exists("treemap_data.txt"):
+    if data_exists("treemap_data.txt"):
         print(
             f"Found path to treemap data:\n\n{create_path_to_data('treemap_data.txt')}\n\n"
             "Skipping 3/3 steps..."
@@ -234,7 +229,7 @@ def script():
             treemap_data_file_path=create_path_to_data("treemap_data.txt")
         )
 
-    elif check_if_data_exists("newer_counted.txt") and check_if_data_exists(
+    elif data_exists("newer_counted.txt") and data_exists(
         "older_counted.txt"
     ):
         print(
@@ -248,7 +243,7 @@ def script():
         )
         displaying_treemap(treemap_data_file_path=treemap_data_file_path)
 
-    elif check_if_data_exists("new.txt") and check_if_data_exists("old.txt"):
+    elif data_exists("new.txt") and data_exists("old.txt"):
         print(
             f"Found path to new data:\n\n{create_path_to_data('new.txt')}\n\n"
             f"And found path to old data:\n\n{create_path_to_data('old.txt')}\n\n"
@@ -282,14 +277,35 @@ def script():
 
 # Running the actual script
 if __name__ == "__main__":
-
-    args = parser.parse_args()
-
-    if len(sys.argv) == 1:
-        parser.print_help()
-
-    if args.repo and args.date:
-        execution_time = timeit.timeit(
-            script, number=1
-        )  # number specifies how many times to run the function
-        print(f"Execution time: {execution_time:.2f} seconds")
+        
+        # commandline arguments given by the user
+        args = parser.parse_args()
+        if args.repo and args.date:
+            # Checking the user input first  
+            # both inputs are used if no cache files are found in script function
+            if directory_exists(path_to_repo=args.repo):
+                path_to_repo: str = args.repo
+            else: 
+                sys.exit(1)
+            if date_format_correct(date=args.date): 
+                date: str = args.date
+            else: 
+                sys.exit(1)
+         
+            # Used to check the writing permissions in the current working directory 
+            # if writing permission exists it creates a texfile (which is part of the cache); will be overwritten later 
+            path_to_check_wr_permission: str = create_path_to_data("old.txt")
+            
+            try:
+                file = open(path_to_check_wr_permission, "w")
+                file.close()        
+            except PermissionError:
+                path_to_starting_dir = args.repo
+            
+            if len(sys.argv) == 1: #TODO: this code snippet is somehow not working; argparse prints usage automatically 
+                parser.print_help()
+        
+            execution_time = timeit.timeit(
+                script, number=1
+            )  # number specifies how many times to run the function
+            print(f"Execution time: {execution_time:.2f} seconds")
