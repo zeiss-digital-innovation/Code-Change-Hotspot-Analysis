@@ -8,7 +8,10 @@ from collections import Counter
 
 
 sys.dont_write_bytecode = True
-
+# The path to the directory in which the user runs the script
+# Used for caching (creating the texfiles)
+# might be overwritten with the repo path from user input
+path_to_starting_dir: str = os.getcwd() 
     
 parser = argparse.ArgumentParser(
     description="A script that displays a interactive treemap in the web-browser. "
@@ -42,12 +45,12 @@ def date_format_correct(date: str) -> bool:
         print(f"Error Message:\n{e}")
         return False
 
+# both functions typically used to test if data (cache) files exist
+def data_exists(file_path: str) -> bool:
+    return os.path.exists(create_path_to_data(file_path))
 
-def data_exists(file_name: str):
-    return os.path.exists(create_path_to_data(file_name))
-
-
-def create_path_to_data(file_name: str):
+# os.getcwd() can change thats why it is using path_to_starting_dir
+def create_path_to_data(file_name: str) -> str:
     return os.path.join(path_to_starting_dir, file_name)
 
 
@@ -288,11 +291,7 @@ if __name__ == "__main__":
                 date: str = args.date
             else: 
                 sys.exit(1)
-        
-            # The path to the directory in which the user runs the script
-            # Used for caching (creating the texfiles)
-            # might be overwritten with the repo path from user input
-            path_to_starting_dir: str = os.getcwd()  
+         
             # Used to check the writing permissions in the current working directory 
             # if writing permission exists it creates a texfile (which is part of the cache); will be overwritten later 
             path_to_check_wr_permission: str = create_path_to_data("old.txt")

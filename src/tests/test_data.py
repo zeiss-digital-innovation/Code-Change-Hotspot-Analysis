@@ -39,17 +39,17 @@ class TestData(unittest.TestCase):
  
 #Testing if a path to a textfile containing data exists        
     # -------------    
-    def test_check_if_data_exists(self):
+    def test_data_exists(self):
         path_to_data: str = "src/tests/data/treemap_data.txt"
         
-        check: bool = ch.data_exists(file_name=path_to_data)
+        check: bool = ch.data_exists(file_path=path_to_data)
         
         self.assertTrue(check)
         
-    def test_check_if_data_exists_failure(self):
+    def test_data_exists_failure(self):
         path_to_nonexistent_data: str = "path/to/nonexistentdata"
         
-        check: bool = ch.data_exists(file_name=path_to_nonexistent_data)
+        check: bool = ch.data_exists(file_path=path_to_nonexistent_data)
         
         self.assertFalse(check)  
 
