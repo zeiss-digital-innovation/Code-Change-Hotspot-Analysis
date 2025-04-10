@@ -14,28 +14,26 @@ class TestData(unittest.TestCase):
         #TODO: Add mocking because repo does not exists on vm and other machines
 
         user_input: str = r"C:\Users\DITSTEIN\OneDrive - Carl Zeiss AG\Dokumente\[01] Arbeit\[01] Coding\[02] HotSpot Analyse\Code-Change-Hotspot-Analysis"
-        
-        path_to_repo: str = ch.check_if_directory_exists(path_to_repo=user_input)
-
-        self.assertEqual(user_input, path_to_repo)
-
+        self.assertEqual(True, ch.directory_exists(path_to_repo=user_input))
+    
     def test_check_if_directory_exists_faliure(self):
+    #TODO: has to be rewritten
         user_input: str = r"C:\this\is\a\nonexistent\path"
         
         with self.assertRaises(SystemExit) as cm:
-            ch.check_if_directory_exists(path_to_repo=user_input)
+            ch.directory_exists(path_to_repo=user_input)
             
         self.assertEqual(cm.exception.code, 1)
         
     # -------------
     def test_check_date_format(self):
-        result = ch.check_date_format(date="2024-02-01")
+        result = ch.date_format_correct(date="2024-02-01")
         
         self.assertEqual(result, "2024-02-01")
 
     def test_check_date_format_faliure(self): 
         with self.assertRaises(SystemExit) as cm:
-            ch.check_date_format(date="01/01/2024")
+            ch.date_format_correct(date="01/01/2024")
         
         self.assertEqual(cm.exception.code, 1)
  
@@ -44,14 +42,14 @@ class TestData(unittest.TestCase):
     def test_check_if_data_exists(self):
         path_to_data: str = "src/tests/data/treemap_data.txt"
         
-        check: bool = ch.check_if_data_exists(file_name=path_to_data)
+        check: bool = ch.data_exists(file_name=path_to_data)
         
         self.assertTrue(check)
         
     def test_check_if_data_exists_failure(self):
         path_to_nonexistent_data: str = "path/to/nonexistentdata"
         
-        check: bool = ch.check_if_data_exists(file_name=path_to_nonexistent_data)
+        check: bool = ch.data_exists(file_name=path_to_nonexistent_data)
         
         self.assertFalse(check)  
 
