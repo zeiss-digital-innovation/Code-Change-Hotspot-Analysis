@@ -1,4 +1,4 @@
 # Personas 
 
-### Hans, 32, SofwareArchitekt 
-Hans ist Softwarearchitekt bei Carl Zeiss Digital Innovation und hat dabei über 10 Jahre lang Erfahrung in verschiedenen Programmiersprachen und Frameworks, aber auch in Versioncontrolsystems (VCS) wie Git(-Hub) und Azure Dev Ops. Er leitet ein Team aus 4 Entwicklern. Ihm persönlich ist die Übersicht wichtig. Hans möchte schnell erkennen welche Dateien am wenigsten geändert werden.
+### Hans, 32, Software Architect
+Hans is a software architect at large german software company and has over 10 years of experience in various programming languages and frameworks, as well as in version control systems (VCS) such as Git(-Hub) and Azure Dev Ops. He leads a team of 4 developers. For him, having an overview is important. Hans wants to quickly identify which files have been changed the least.

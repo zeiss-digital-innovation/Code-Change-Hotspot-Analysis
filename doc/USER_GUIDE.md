@@ -27,7 +27,8 @@ The grey nodes are usally directories that contain hot- and coldspots. Directori
 *Picture 2* 
 Here is an example to show the interactivity of the treemap. The user can click on one node to "drill-down" and see the individual nodes in more detail. 
 ### Target Audience 
-(also refer to scenarios and personas)
+Every developer, Software Architect and Data Analyst who needs a quick Hot- and Coldspot analysis on a local repository.   
+Have a look at `secenarios.md` and `personas.md` 
 
 # Installation Guide
 ### Requirements
