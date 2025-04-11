@@ -3,11 +3,18 @@
 ### Main Features
 `createHotspots.py` is a small tool that automatically generates an interactive treemap in the web browser functioning as a tool for Hot- and Coldspotanalysis using the [plotly](https://plotly.com/python/treemaps/) framework. It generates data using the [git log](https://git-scm.com/book/en/v2/Git-Basics-Viewing-the-Commit-History) history from a local git repository given by the user.  
 
-A file is regarded as a cold- or hotspot, depending on the date the change on the file has been commited. To differentiate between cold- and hotspots, the tool uses a **reference date** (i.e. 2024-02-22) given by the user.   
-**Hotspots** are files that have recently been changed, meaning changes on the file that have been commited after the refernce date.   
+**What is a Hot-/Coldspotanalysis and what is the purpose?**  
+A compiler based programming language "builds" an application before executing it. Under the hood the compiler translates the code written by a human (for example in C#, Java or Rust) into machine code. In cases of huge proprietary software this process can take up to an hour or more. Everytime a developer makes a change and wants to execute the code afterwards, the application has to be rebuild. Often the application contains code that is not edited anymore (so called "Legacy Code") and therefore does not need to be included in every new build. This is where the Hot-/Coldspotanalysis comes into play! The Analysis helps to locate files/directories that can be excluded from new builds in order to **shorten the time for any new build**.  
+
+**What are Hot- and Coldspots?**  
+**Hotspots** are files that have recently been changed, meaning changes on the file that have been commited after the reference date.   
 **Coldspots** are files that have not been changed recently, meaning there are no changes commited after the reference date.  
 **Note:** If you hover over a file regarded as a coldspot it will still have *one* change. This is the initial commit and has to be added in order for the file to be shown on the treemap.  
-A **node** is an individual rectangle schown on the treemap. They are nested, since a common folder structure of a repository is also nested. The bigger a node the more changes it has. For example: In *Picture 1* the `readme.md` file in the `doc` directory has 11 changes while the `api_reference.md` has only 8 changes and thus is smaller. 
+**What is a node?**    
+A **node** is an individual rectangle schown on the treemap. They are nested, since a common folder structure of a repository is also nested. The bigger a node the more changes it has. For example: In *Picture 1* the `readme.md` file in the `doc` directory has 11 changes while the `api_reference.md` has only 8 changes and thus is smaller.  
+**When is a file regarded as a Hot- or Coldspot?**  
+A file is regarded as a cold- or hotspot, depending on the date the change on the file has been commited. To differentiate between cold- and hotspots, the tool uses a **reference date** (i.e. 2024-02-22) given by the user. 
+
 
 Example on how a treemap might look like using pseudo data: 
 
