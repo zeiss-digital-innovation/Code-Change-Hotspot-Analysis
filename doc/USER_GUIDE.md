@@ -26,14 +26,33 @@ The grey nodes are usally directories that contain hot- and coldspots. Directori
 ![treemap_example_2_png](images/treemap_example_2.png)  
 *Picture 2* 
 Here is an example to show the interactivity of the treemap. The user can click on one node to "drill-down" and see the individual nodes in more detail. 
+
+
 ### Target Audience 
 Every developer, Software Architect and Data Analyst who needs a quick Hot- and Coldspot analysis on a local repository.   
 Have a look at `secenarios.md` and `personas.md` 
 
 # Installation Guide
 ### Requirements
-### Installation Steps
 
-# User Manual
+`Python 3.8+`  
+`Python Modules: Pandas & Plotly`  
+`Note: **It is recommended to do download them using a virtual environment**`
+
+### User Manual
+**Note: you might want to adapt the following commands to your OS and interface-specific needs**
+1. Download [Python](https://www.python.org/downloads/) 3.8 or higher if you have not already
+2. Download [git](https://git-scm.com/downloads) if you have not already
+3. Clone this repository    
+`git clone https://github.com/zeiss-digital-innovation/Code-Change-Hotspot-Analysis.git`
+
+4. Change to the folder `Code-Change-Hotspot-Analysis` and run in your commandline interface:  
+`python -m venv .venv`  
+This creates a virtual environment in the folder `Code-Change-Hotspot-Analysis`  
+5. Activate it by running `.venv\Scripts\activate`
+6. Install the required modules by running `pip install -r requirements.txt`
+7. Create your first treemap with the following comand:  
+`python src\createHotspots.py "2025-03-10" ".\\"
+
 ### Step by Step Guide
 with screenshots and code snippets
