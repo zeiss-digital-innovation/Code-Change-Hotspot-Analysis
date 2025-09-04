@@ -188,12 +188,16 @@ def displaying_treemap(treemap_data_file_path: str):
             if line.strip():
                 path, changes = line.strip().split(": ")
                 changes = int(changes)
-                changes += 1  # Counting this as the initial commit
+                changes += 1  
+                # Counting this as the initial commit, 
+                # because changes can be 0
+                # and plotly does not display nodes with a value of 0
                 data.append({"File Path": path, "Changes": changes})
             else:
                 continue
     df = pd.DataFrame(data)
 
+    # stores each path component in one list
     df["Path Components"] = df["File Path"].apply(lambda x: x.split("/"))
     max_depth_of_dir: int = df["Path Components"].apply(len).max()
     for i in range(0, max_depth_of_dir):
@@ -284,8 +288,8 @@ if __name__ == "__main__":
         # commandline arguments given by the user
         args = parser.parse_args()
         if args.repo and args.date:
-            # Checking the user input first  
-            # both inputs are used if no cache files are found in script function
+            # these two functions return boolean values
+            # they do not handle exiting the script themselves
             if directory_exists(path_to_repo=args.repo):
                 path_to_repo: str = args.repo
             else: 
